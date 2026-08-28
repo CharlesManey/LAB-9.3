@@ -13,6 +13,11 @@ function App() {
   {id: "3", title: "Task 3", description: "Description 3", status: "completed", priority: "high", dueDate: "8/29/2026"},
   ]);
 
+  const [filters, setFilters] = useState<{
+    status?: TaskStatus;
+    priority?: 'low' | 'medium' | 'high';
+  }>({});
+
   const handleDelete = (id: string) => {
     setTasks(prev => prev.filter(task => task.id !== id));
   }
@@ -20,6 +25,20 @@ function App() {
   const handleStatusChange = (id:string, newStatus: TaskStatus) => {
     setTasks(prev => prev.map(task => task.id === id ? {...task, status: newStatus} : task));
   }
+
+  const filteredTasks = tasks.filter((task) => {
+
+    if (filters.status && task.status !== filters.status) {
+      return false;
+    }
+
+    if (filters.priority && task.priority !== filters.priority) {
+      return false;
+    }
+
+    return true;
+
+  });
 
   return (
     <div className="flex justify-center p-5">
@@ -47,8 +66,8 @@ function App() {
           <button type="submit" className="border-2 rounded-lg p-1 w-1/3 self-center">Add New Task</button>
         </form>
         <div className="self-start flex flex-col gap-5">
-          <TaskFilter />
-          <TaskList tasks={tasks} onDelete={handleDelete} onStatusChange={handleStatusChange}/>
+          <TaskFilter onFilterChange={setFilters}/>
+          <TaskList tasks={filteredTasks} onDelete={handleDelete} onStatusChange={handleStatusChange}/>
         </div>
       </div>
     </div>
