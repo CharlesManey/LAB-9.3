@@ -35,7 +35,7 @@ function TaskFilter({onFilterChange} : TaskFilterProps) {
     <div className="flex gap-5">
       <div>
         <h5>Status</h5>
-        <select className="border-2" name="" id="" value={status} onChange={(event) => handleStatusChange(event.target.value as TaskStatus | 'all')}>
+        <select className="border-2" name="status" id="status" value={status} onChange={(event) => handleStatusChange(event.target.value as TaskStatus | 'all')}>
           <option value="all">All Statuses</option>
           <option value="pending">Pending</option>
           <option value="in-progress">In Progress</option>
@@ -44,7 +44,7 @@ function TaskFilter({onFilterChange} : TaskFilterProps) {
       </div>
       <div>
         <h5>Priority</h5>
-        <select className="border-2" name="" id="" value={priority} onChange={(event) => handlePriorityChange(event.target.value as 'low' | 'medium' | 'high' | 'all')}>
+        <select className="border-2" name="priority" id="priority" value={priority} onChange={(event) => handlePriorityChange(event.target.value as 'low' | 'medium' | 'high' | 'all')}>
           <option value="all">All Priorities</option>
           <option value="high">High</option>
           <option value="medium">Medium</option>
