@@ -1,34 +1,74 @@
-import { ArrowsUpDownIcon } from "@heroicons/react/24/solid";
+import { ArrowsUpDownIcon, ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { type TaskStatus } from "./TaskList";
+
+export type SortField = 'priority' | 'dueDate' | null;
+export type SortOrder = 'asc' | 'desc';
 
 export interface TaskFilterProps {
   onFilterChange: (filters: {
     status?: TaskStatus;
     priority?: 'low' | 'medium' | 'high';
+    sortBy?: SortField;
+    sortOrder?: SortOrder;
   }) => void;
 }
 
 function TaskFilter({onFilterChange} : TaskFilterProps) {
   const [status, setStatus] = useState<TaskStatus | 'all'>('all');
   const [priority, setPriority] = useState< 'low' | 'medium' | 'high' | 'all' >('all');
+  const [sortBy, setSortBy] = useState<SortField>(null);
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc')
+
+  const notifyChange = (
+    updatedStatus = status,
+    updatedPriority = priority,
+    updatedSortBy = sortBy,
+    updatedSortOrder = sortOrder,
+  ) => {
+    onFilterChange({
+      status: updatedStatus === 'all' ? undefined : updatedStatus,
+      priority: updatedPriority === 'all' ? undefined: updatedPriority,
+      sortBy: updatedSortBy ?? undefined,
+      sortOrder: updatedSortBy ? updatedSortOrder : undefined,
+    });
+  }
 
   const handleStatusChange = (value: TaskStatus | 'all') => {
     setStatus(value);
-
-    onFilterChange({
-      status: value === 'all' ? undefined : value,
-      priority: priority === 'all' ? undefined: priority,
-    });
+    notifyChange(value, priority, sortBy, sortOrder);
   };
 
   const handlePriorityChange = (value: 'low' | 'medium' | 'high' | 'all') => {
     setPriority(value);
+    notifyChange(status, value, sortBy, sortOrder);
+    // onFilterChange({
+    //   status: status === 'all' ? undefined : status,
+    //   priority: value === 'all' ? undefined : value,
+    // });
+  };
 
-    onFilterChange({
-      status: status === 'all' ? undefined : status,
-      priority: value === 'all' ? undefined : value,
-    });
+  const handleSortToggle = (field: 'priority' | 'dueDate') => {
+    let newOrder: SortOrder = 'asc';
+
+    if (sortBy === field) {
+      newOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+    }
+
+    setSortBy(field);
+    setSortOrder(newOrder);
+    notifyChange(status, priority, field, newOrder);
+  };
+
+  const renderSortIcon = (field: 'priority' | 'dueDate') => {
+    if (sortBy !== field) {
+      return <ArrowsUpDownIcon className="size-5" />
+    }
+    return sortOrder === 'asc' ? (
+      <ArrowUpIcon className="size-5" /> 
+    ) : (
+      <ArrowDownIcon className="size-5" />
+    );
   };
 
   return (
@@ -55,8 +95,22 @@ function TaskFilter({onFilterChange} : TaskFilterProps) {
         <div className="flex flex-col w-fit xl:items-center">
           <h5 className="font-semibold text-lg">Sort By</h5>
           <div className="flex flex-col xl:flex-row gap-3">
-            <button className="border-2 rounded-sm px-2 shadow-md shadow-black flex items-center justify-between gap-1">Priority<ArrowsUpDownIcon className="size-5"/></button>
-            <button className="border-2 rounded-sm px-2 shadow-md shadow-black flex items-center justify-between gap-1">Due Date<ArrowsUpDownIcon className="size-5"/></button>
+            <button 
+            type="button"
+            className={`border-2 rounded-sm px-2 shadow-md shadow-black flex items-center justify-between gap-1
+            ${sortBy === 'priority' ? 'bg-gray-200 font-semibold' : ''}
+            `}
+            onClick={() => handleSortToggle('priority')}
+            >Priority{renderSortIcon('priority')}
+            </button>
+            <button
+            type="button"
+            className={`border-2 rounded-sm px-2 shadow-md shadow-black flex items-center justify-between gap-1
+            ${sortBy === 'dueDate' ? 'bg-gray-200 font-semibold' : ''}
+            `}
+            onClick={() => handleSortToggle('dueDate')}
+            >Due Date{renderSortIcon('dueDate')}
+            </button>
           </div>
         </div>
       </div>

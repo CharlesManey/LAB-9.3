@@ -1,10 +1,13 @@
 import { useState } from "react";
-import TaskFilter from "./TaskFilter";
+import TaskFilter, { type SortField, type SortOrder } from "./TaskFilter";
 import TaskForm from "./TaskForm";
 import TaskList, { type Task, type TaskStatus } from "./TaskList";
 
-
-
+const PRIORITY_WEIGHTS: Record<string, number> = {
+  low: 1,
+  medium: 2,
+  high: 3,
+};
 
 
 function Dashboard() {
@@ -18,14 +21,16 @@ function Dashboard() {
   {id: "6", title: "Task 6", description: "Description 3", status: "completed", priority: "high", dueDate: "8/29/2026"},
   ]);
 
-  const handleAddTask = (newTask: Task) => {
-    setTasks(prev => [newTask, ...prev]);
-  }
-
   const [filters, setFilters] = useState<{
     status?: TaskStatus;
     priority?: 'low' | 'medium' | 'high';
+    sortBy?: SortField;
+    sortOrder?: SortOrder;
   }>({});
+
+  const handleAddTask = (newTask: Task) => {
+    setTasks(prev => [newTask, ...prev]);
+  }
 
   const handleDelete = (id: string) => {
     setTasks(prev => prev.filter(task => task.id !== id));
@@ -49,6 +54,23 @@ function Dashboard() {
 
   });
 
+  const sortedTasks = [...filteredTasks].sort((a, b) => {
+    const {sortBy, sortOrder} = filters;
+
+    if (!sortBy) return 0;
+
+    let comparison = 0;
+
+    if (sortBy === 'priority') {
+      comparison = PRIORITY_WEIGHTS[a.priority] - PRIORITY_WEIGHTS[b.priority];
+    } else if (sortBy === 'dueDate') {
+      comparison = new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+    }
+
+    return sortOrder === 'desc' ? -comparison : comparison;
+  });
+
+
   return (
     <div className="flex flex-col xl:flex-row xl:gap-20 p-3">
       <div>
@@ -56,7 +78,7 @@ function Dashboard() {
       </div>
       <div>
         <TaskFilter onFilterChange={setFilters}/>
-        <TaskList tasks={filteredTasks} onDelete={handleDelete} onStatusChange={handleStatusChange}/>
+        <TaskList tasks={sortedTasks} onDelete={handleDelete} onStatusChange={handleStatusChange}/>
       </div>
     </div>
   );
