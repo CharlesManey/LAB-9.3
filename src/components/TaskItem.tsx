@@ -35,7 +35,7 @@ function TaskItem({task , onStatusChange, onDelete}: TaskItemProps){
           <h3>Due: {formatDate(dueDate)}</h3>
         </div>
       </div>
-      <div className="flex items-start gap-3">
+      <div className="flex flex-col xl:flex-row items-end xl:items-start gap-3">
         <select className={`border rounded-sm p-0.5 shadow-sm shadow-black ${statusColors[status]}`} value={status} onChange={(event) => onStatusChange(id, event.target.value as TaskStatus)}>
           <option className="bg-white text-black" value="pending">Pending</option>
           <option className="bg-white text-black" value="in-progress">In Progress</option>

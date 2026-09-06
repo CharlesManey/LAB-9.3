@@ -33,7 +33,7 @@ function TaskFilter({onFilterChange} : TaskFilterProps) {
 
   return (
     <div className="border-3 rounded-lg w-full p-5 shadow-md shadow-black">
-      <div className="flex gap-5 pb-5 justify-between">
+      <div className="flex flex-col xl:flex-row gap-5 pb-5 justify-between">
         <div>
           <h5 className="font-semibold text-lg">Status</h5>
           <select className="border-2 rounded-sm shadow-md shadow-black" name="status" id="status" value={status} onChange={(event) => handleStatusChange(event.target.value as TaskStatus | 'all')}>
@@ -52,11 +52,11 @@ function TaskFilter({onFilterChange} : TaskFilterProps) {
             <option value="low">Low</option>
           </select>
         </div>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col w-fit xl:items-center">
           <h5 className="font-semibold text-lg">Sort By</h5>
-          <div className="flex gap-3">
-            <button className="border-2 rounded-sm px-2 shadow-md shadow-black flex items-center gap-1">Priority<ArrowsUpDownIcon className="size-5"/></button>
-            <button className="border-2 rounded-sm px-2 shadow-md shadow-black flex items-center gap-1">Due Date<ArrowsUpDownIcon className="size-5"/></button>
+          <div className="flex flex-col xl:flex-row gap-3">
+            <button className="border-2 rounded-sm px-2 shadow-md shadow-black flex items-center justify-between gap-1">Priority<ArrowsUpDownIcon className="size-5"/></button>
+            <button className="border-2 rounded-sm px-2 shadow-md shadow-black flex items-center justify-between gap-1">Due Date<ArrowsUpDownIcon className="size-5"/></button>
           </div>
         </div>
       </div>

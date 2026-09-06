@@ -50,7 +50,7 @@ function Dashboard() {
   });
 
   return (
-    <div className="flex flex-col xl:flex-row xl:gap-20">
+    <div className="flex flex-col xl:flex-row xl:gap-20 p-3">
       <div>
         <TaskForm onAddTask={handleAddTask}/>
       </div>
