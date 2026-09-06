@@ -11,23 +11,37 @@ function TaskItem({task , onStatusChange, onDelete}: TaskItemProps){
 
   const {id, title, description, status, priority, dueDate} = task;
 
+  const statusColors: Record<TaskStatus, string> = {
+    pending: 'bg-yellow-300 text-yellow-950',
+    'in-progress': 'bg-blue-500 text-white',
+    completed: 'bg-green-500 text-white',
+  };
+
+  const formatDate = (dateString: string): string | undefined => {
+    if (!dateString) return '';
+    const [year, month, day] = dateString.split('-');
+    if (!year || !month || !day) return dateString;
+    return `${month}/${day}/${year}`;
+
+  }
+
   return (
-    <div className="flex">
+    <div className="flex justify-between border rounded-xl p-5 shadow-md shadow-black">
       <div>
-        <h1>{title}</h1>
-        <h2>{description}</h2>
+        <h1 className="font-semibold text-lg">{title}</h1>
+        <h2 className="whitespace-pre-wrap">{description}</h2>
         <div className="flex gap-5">
-          <h3>Priority: {priority}</h3>
-          <h3>Due: {dueDate}</h3>
+          <h3 className={priority === 'high' ? 'text-red-500' : priority === 'medium' ? 'text-yellow-500' : 'text-green-500'}>Priority: {priority}</h3>
+          <h3>Due: {formatDate(dueDate)}</h3>
         </div>
       </div>
-      <div>
-        <select value={status} onChange={(event) => onStatusChange(id, event.target.value as TaskStatus)}>
-          <option value="pending">Pending</option>
-          <option value="in-progress">In Progress</option>
-          <option value="completed">Completed</option>
+      <div className="flex items-start gap-3">
+        <select className={`border rounded-sm p-0.5 shadow-sm shadow-black ${statusColors[status]}`} value={status} onChange={(event) => onStatusChange(id, event.target.value as TaskStatus)}>
+          <option className="bg-white text-black" value="pending">Pending</option>
+          <option className="bg-white text-black" value="in-progress">In Progress</option>
+          <option className="bg-white text-black" value="completed">Completed</option>
         </select>
-        <button onClick={() => onDelete(id)}>Delete</button>
+        <button className="border rounded-sm p-0.5 shadow-sm shadow-black" onClick={() => onDelete(id)}>Delete</button>
       </div>
     </div>
   );

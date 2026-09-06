@@ -21,7 +21,7 @@ export interface TaskListProps {
 function TaskList({tasks, onStatusChange, onDelete}: TaskListProps) {
   
   return (
-    <div>
+    <div className="flex flex-col gap-5 pt-5">
       {tasks.map((task) => (
         <TaskItem key={task.id} task={task} onStatusChange={onStatusChange} onDelete={onDelete}/>
       ))}
